@@ -39,7 +39,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("SolutionEngineerId");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("Accounts", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.AccountExecutive", b =>
@@ -55,7 +55,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AccountExecutives");
+                    b.ToTable("AccountExecutives", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.AccountProduct", b =>
@@ -79,7 +79,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("AccountProducts");
+                    b.ToTable("AccountProducts", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.Product", b =>
@@ -97,7 +97,7 @@ namespace SalesApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.SOW", b =>
@@ -116,7 +116,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Sows");
+                    b.ToTable("Sows", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.SOWProduct", b =>
@@ -143,7 +143,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("SowId");
 
-                    b.ToTable("SowProducts");
+                    b.ToTable("SowProducts", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.SolutionEngineer", b =>
@@ -159,7 +159,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SolutionEngineers");
+                    b.ToTable("SolutionEngineers", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.User", b =>
@@ -185,7 +185,7 @@ namespace SalesApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.Account", b =>

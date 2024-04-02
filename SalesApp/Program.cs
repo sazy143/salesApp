@@ -1,8 +1,6 @@
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SalesApp.Contexts;
 using SalesApp.Controllers;
@@ -11,6 +9,7 @@ using SalesApp.Interfaces.Services;
 using SalesApp.Models.DB;
 using SalesApp.Repositories;
 using SalesApp.Services;
+using IAuthenticationService = SalesApp.Interfaces.Services.IAuthenticationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,45 +23,52 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer",
-                                         new OpenApiSecurityScheme()
-                                         {
-                                             Name = "Authorization",
-                                             Type = SecuritySchemeType.Http,
-                                             Scheme = "Bearer",
-                                             BearerFormat = "JWT",
-                                             In = ParameterLocation.Header,
-                                             Description = "JWT Authorization header using the Bearer scheme."
-                                         });
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "JWT Authorization header using the Bearer scheme."
+        });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
-           {
-               {
-                   new OpenApiSecurityScheme
-                   {
-                       Reference = new OpenApiReference
-                       {
-                           Type = ReferenceType.SecurityScheme,
-                           Id = "Bearer"
-                       }
-                   },
-                   Array.Empty<string>()
-               }
-           });
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 #region DI
 
 #region Contexts
+
 builder.Services.AddDbContext<SalesAppContext>();
+
 #endregion
 
 #region Services
+
 builder.Services.AddSingleton<IWeatherService, WeatherService>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+
 #endregion
 
 #region Repositories
+
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<AccountExecutiveRepository>();
+
 #endregion
 
 #endregion
@@ -94,9 +100,9 @@ app.MapGet("/AE",
     await accountExecutiveRepository.GetAccountExecutives()).WithOpenApi();
 
 app.MapGet("/secret", (ClaimsPrincipal user) => $"Hello {user.Identity?.Name}. My secret")
-.RequireAuthorization();
+    .RequireAuthorization();
 
-UserController.Map(app);
+AuthenticationController.Map(app);
 
 
 using (var scope = app.Services.CreateScope())
@@ -104,10 +110,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     var context = services.GetRequiredService<SalesAppContext>();
-    if (context.Database.GetPendingMigrations().Any())
-    {
-        context.Database.Migrate();
-    }
+    if (context.Database.GetPendingMigrations().Any()) context.Database.Migrate();
 }
 
 app.Run();
