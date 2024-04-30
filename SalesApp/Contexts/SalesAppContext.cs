@@ -12,6 +12,7 @@ public class SalesAppContext : DbContext
     public DbSet<SolutionEngineer> SolutionEngineers { get; set; }
     public DbSet<SOW> Sows { get; set; }
     public DbSet<SOWProduct> SowProducts { get; set; }
+    public DbSet<User> Users {get; set;}
     
     public string DbPath { get; }
     

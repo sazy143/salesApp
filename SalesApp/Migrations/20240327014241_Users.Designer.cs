@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SalesApp.Contexts;
 
@@ -10,9 +11,11 @@ using SalesApp.Contexts;
 namespace SalesApp.Migrations
 {
     [DbContext(typeof(SalesAppContext))]
-    partial class SalesAppContextModelSnapshot : ModelSnapshot
+    [Migration("20240327014241_Users")]
+    partial class Users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
@@ -39,7 +42,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("SolutionEngineerId");
 
-                    b.ToTable("Accounts", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.AccountExecutive", b =>
@@ -55,7 +58,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AccountExecutives", (string)null);
+                    b.ToTable("AccountExecutives");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.AccountProduct", b =>
@@ -79,7 +82,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("AccountProducts", (string)null);
+                    b.ToTable("AccountProducts");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.Product", b =>
@@ -97,7 +100,7 @@ namespace SalesApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.SOW", b =>
@@ -116,7 +119,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Sows", (string)null);
+                    b.ToTable("Sows");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.SOWProduct", b =>
@@ -143,7 +146,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("SowId");
 
-                    b.ToTable("SowProducts", (string)null);
+                    b.ToTable("SowProducts");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.SolutionEngineer", b =>
@@ -159,7 +162,7 @@ namespace SalesApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SolutionEngineers", (string)null);
+                    b.ToTable("SolutionEngineers");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.User", b =>
@@ -185,7 +188,7 @@ namespace SalesApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SalesApp.Models.DB.Account", b =>
