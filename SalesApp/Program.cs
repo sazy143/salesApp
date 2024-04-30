@@ -1,6 +1,8 @@
 using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SalesApp.Contexts;
 using SalesApp.Controllers;
@@ -14,7 +16,16 @@ using IAuthenticationService = SalesApp.Interfaces.Services.IAuthenticationServi
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
-builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWTKey").Value!))
+    };
+});
 builder.Services.AddAuthorization();
 
 // Add services to the container.
@@ -99,7 +110,7 @@ app.MapGet("/AE",
     async ([FromServices] AccountExecutiveRepository accountExecutiveRepository) =>
     await accountExecutiveRepository.GetAccountExecutives()).WithOpenApi();
 
-app.MapGet("/secret", (ClaimsPrincipal user) => $"Hello {user.Identity?.Name}. My secret")
+app.MapGet("/secret", (ClaimsPrincipal user) => $"Hello {user.Claims.First(x => x.Type.Equals("Name"))}. My secret")
     .RequireAuthorization();
 
 AuthenticationController.Map(app);

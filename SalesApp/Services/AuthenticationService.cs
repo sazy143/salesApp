@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
+using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using SalesApp.Interfaces.Services;
 using SalesApp.Models.DB;
@@ -8,7 +10,7 @@ using SalesApp.Models.DTOs;
 
 namespace SalesApp.Services;
 
-public class AuthenticationService(IUserService userService) : IAuthenticationService
+public class AuthenticationService(IUserService userService, IConfiguration configuration) : IAuthenticationService
 {
     public async Task<string> RegisterUser(RegisterDto user)
     {
@@ -41,7 +43,7 @@ public class AuthenticationService(IUserService userService) : IAuthenticationSe
             new Claim("Role", user.UserType.ToString())
         ];
 
-        var key = new SymmetricSecurityKey("abcabcabcababcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc"u8.ToArray());
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWTKey").Value!));
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
